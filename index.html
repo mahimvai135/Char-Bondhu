@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আমাদের চার বন্ধু | Our 4 Friends</title>
+    <!-- Google Fonts for Bengali & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+            min-height: 100vh;
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px 20px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: #38bdf8;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 10px rgba(56, 189, 248, 0.3);
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #94a3b8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+        }
+
+        /* 4 Friends Grid Layout */
+        .friends-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .friend-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .friend-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(56, 189, 248, 0.5);
+            box-shadow: 0 20px 40px rgba(56, 189, 248, 0.15);
+        }
+
+        .edit-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #94a3b8;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .edit-btn:hover {
+            background: #38bdf8;
+            color: #0f172a;
+        }
+
+        .img-container {
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            padding: 4px;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            background-color: #1e293b;
+        }
+
+        .friend-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 8px;
+        }
+
+        .hobby-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 10px;
+            margin: 15px 0;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .hobby-title {
+            font-size: 0.85rem;
+            color: #38bdf8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 3px;
+        }
+
+        .hobby-text {
+            font-size: 1rem;
+            color: #cbd5e1;
+        }
+
+        .fb-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 10px;
+            background: #1877f2;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: 0.2s;
+            margin-top: 5px;
+        }
+
+        .fb-btn:hover {
+            background: #166fe5;
+            box-shadow: 0 5px 15px rgba(24, 119, 242, 0.4);
+        }
+
+        /* Modal / Edit Popup Style */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal h2 {
+            margin-bottom: 15px;
+            color: #38bdf8;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: #fff;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #38bdf8;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-save {
+            flex: 1;
+            padding: 10px;
+            background: #38bdf8;
+            border: none;
+            color: #0f172a;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 10px;
+            background: #475569;
+            border: none;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><i class="fa-solid fa-users"></i> আমরা চার বন্ধু</h1>
+        <p>সবথেকে বেশি জরুরি হলো,
+জীবনে ভালো কিছু বন্ধু আর বান্ধবী থাকা,
+থাকলে জীবন সুন্দর😔💝</p>
+    </header>
+
+    <div class="container">
+        <div class="friends-grid" id="friendsGrid">
+            <!-- Cards will be rendered dynamically by JavaScript -->
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 চার বন্ধু গ্যাং | All Rights Reserved.
+    </footer>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <h2>তথ্য পরিবর্তন করুন</h2>
+            <div class="form-group">
+                <label>নাম</label>
+                <input type="text" id="editName">
+            </div>
+            <div class="form-group">
+                <label>শখ</label>
+                <input type="text" id="editHobby">
+            </div>
+            <div class="form-group">
+                <label>ছবি (Image URL)</label>
+                <input type="text" id="editImage">
+            </div>
+            <div class="form-group">
+                <label>ফেসবুক প্রোফাইল লিংক</label>
+                <input type="text" id="editFb">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="closeModal()">বাতিল</button>
+                <button class="btn-save" onclick="saveData()">সেভ করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Default Data for 4 Friends
+        const defaultFriends = [
+            {
+                id: 0,
+                name: "মোঃ মাহিম শেখ",
+                hobby: "মিয়ের নেশা",
+                image: "https://kommodo.ai/i/O50fDdnMaJAc7Jz0LDO2",
+                fb: "https://www.facebook.com/profile.php?id=61573230715013"
+            },
+            {
+                id: 1,
+                name: "মোঃ ইব্রাহিম হোসেন",
+                hobby: "খেলাধুলা,ঘোরাঘুরি",
+                image: "https://kommodo.ai/i/FvqgLh8YnjsVU8R1OBzt",
+                fb: "https://www.facebook.com/md.ibrahim.866574"
+            },
+            {
+                id: 2,
+                name: "মোঃ সৌরভ শেখ",
+                hobby: "প্রতিদিন হ্যান্ডেল মারা",
+                image: "https://kommodo.ai/i/KK2oYr7I1plU0rDHdbFQ",
+                fb: "https://facebook.com"
+            },
+            {
+                id: 3,
+                name: "মোঃ তৌবুর রহমান",
+                hobby: "আঁখির জামাই",
+                image: "https://kommodo.ai/i/69r4hmwCQ0sS8r6DcNJ5",
+                fb: "https://www.facebook.com/toyobur.rohoman.32509"
+            }
+        ];
+
+        let currentEditId = null;
+
+        // Load data from LocalStorage or use default
+        function getFriendsData() {
+            const saved = localStorage.getItem('fourFriendsData');
+            return saved ? JSON.parse(saved) : defaultFriends;
+        }
+
+        // Render Cards
+        function renderCards() {
+            const friends = getFriendsData();
+            const grid = document.getElementById('friendsGrid');
+            grid.innerHTML = '';
+
+            friends.forEach(friend => {
+                const card = document.createElement('div');
+                card.className = 'friend-card';
+                card.innerHTML = `
+                    <button class="edit-btn" onclick="openModal(${friend.id})" title="তথ্য এডিট করুন">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+                    <div class="img-container">
+                        <img src="${friend.image}" alt="${friend.name}">
+                    </div>
+                    <div class="friend-name">${friend.name}</div>
+                    <div class="hobby-box">
+                        <div class="hobby-title"><i class="fa-solid fa-heart"></i> শখ</div>
+                        <div class="hobby-text">${friend.hobby}</div>
+                    </div>
+                    <a href="${friend.fb}" target="_blank" class="fb-btn">
+                        <i class="fa-brands fa-facebook"></i> ফেসবুক প্রোফাইল
+                    </a>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Modal Functions
+        function openModal(id) {
+            currentEditId = id;
+            const friends = getFriendsData();
+            const friend = friends.find(f => f.id === id);
+
+            document.getElementById('editName').value = friend.name;
+            document.getElementById('editHobby').value = friend.hobby;
+            document.getElementById('editImage').value = friend.image;
+            document.getElementById('editFb').value = friend.fb;
+
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        function saveData() {
+            let friends = getFriendsData();
+            const index = friends.findIndex(f => f.id === currentEditId);
+
+            if (index !== -1) {
+                friends[index].name = document.getElementById('editName').value;
+                friends[index].hobby = document.getElementById('editHobby').value;
+                friends[index].image = document.getElementById('editImage').value;
+                friends[index].fb = document.getElementById('editFb').value;
+
+                localStorage.setItem('fourFriendsData', JSON.stringify(friends));
+                renderCards();
+                closeModal();
+            }
+        }
+
+        // Initialize App
+        renderCards();
+    </script>
+</body>
+</html>
